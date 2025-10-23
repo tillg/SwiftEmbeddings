@@ -12,12 +12,9 @@ extension NLContextualEmbedding {
     
     func vectorNaive(for sentence: String, language: NLLanguage?) throws -> [Double] {
 
-        // Time the embedding computation; the closure RETURNS the value
         let result = try timerTrack("Embedding") {
             try embeddingResult(for: sentence, language: language)
         }
-
-        // Time the mean computation; again, return from the closure
         let meanVector: [Double]? = timerTrack("MeanVector") {
             result.meanVectorNaive()
         }
@@ -26,14 +23,12 @@ extension NLContextualEmbedding {
         if let mean = meanVector {
             return mean
         } else {
-            print("Error! No mean vector found!")
-            return []
+            fatalError("Could not calculate mean vector")
         }
     }
     
     func vectorDSP(for sentence: String, language: NLLanguage?) throws -> [Double] {
 
-        // Time the embedding computation; the closure RETURNS the value
         let result = try timerTrack("Embedding") {
             try embeddingResult(for: sentence, language: language)
         }
@@ -45,8 +40,7 @@ extension NLContextualEmbedding {
         if let mean = meanVector {
             return mean
         } else {
-            print("Error! No mean vector found!")
-            return []
+            fatalError("Could not calculate mean vector")
         }
     }
     
@@ -80,7 +74,7 @@ extension NLContextualEmbeddingResult {
         
         // Check that we are not facing an empty arry of vectors - avoid div by 0
         guard var sumVector = sumVector, count > 0 else {
-            print("getMeanVectorNaive: No token vectors to average")
+            print("meanVectorNaive: No token vectors to average")
             return nil
         }
         
@@ -107,7 +101,7 @@ extension NLContextualEmbeddingResult {
         
         // Check that we are not facing an empty arry of vectors - avoid div by 0
         guard var sumVector = sumVector, count > 0 else {
-            print("getMeanVectorNaive: No token vectors to average")
+            print("meanVectorDSP: No token vectors to average")
             return nil
         }
         

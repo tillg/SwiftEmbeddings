@@ -15,13 +15,14 @@ import Playgrounds
     A protocol defines a blueprint of methods, properties, and other requirements that suit a particular task or piece of functionality. The protocol can then be adopted by a class, structure, or enumeration to provide an actual implementation of those requirements. Any type that satisfies the requirements of a protocol is said to conform to that protocol.
     In addition to specifying requirements that conforming types must implement, you can extend a protocol to implement some of these requirements or to implement additional functionality that conforming types can take advantage of.
     """
-    if let sentenceEmbedding = NLEmbedding.sentenceEmbedding(for: .english) {
-        guard let vector = sentenceEmbedding.vector(for: question) else {
-            fatalError("Cannot create vector")
-        }
-        let distance = sentenceEmbedding.distance(between: question, and: potentialAnswer)
-        print("Distance: \(distance.description)")
+    guard let sentenceEmbedding = NLEmbedding.sentenceEmbedding(for: .english) else {
+        fatalError("Cannot create Embedding")
     }
+    guard let vector = sentenceEmbedding.vector(for: question) else {
+        fatalError("Cannot create vector")
+    }
+    let distance = sentenceEmbedding.distance(between: question, and: potentialAnswer)
+    print("Distance: \(distance.description)")
 }
 
 
@@ -31,15 +32,17 @@ import Playgrounds
     
     print("Calculating embedding vector for \(chunks.count) chunks")
     
-    if let sentenceEmbedding = NLEmbedding.sentenceEmbedding(for: .english) {
-
-        timerTrack("Calculating vectors with NLEmbedding") {
-            for chunk in chunks {
-                _ = sentenceEmbedding.vector(for: chunk.content)
-            }
-        }
-        timerReport("Calculating vectors with NLEmbedding")
+    guard let sentenceEmbedding = NLEmbedding.sentenceEmbedding(for: .english) else {
+        fatalError("Cannot create Embedding")
     }
+
+    timerTrack("Calculating vectors with NLEmbedding") {
+        for chunk in chunks {
+            _ = sentenceEmbedding.vector(for: chunk.content)
+        }
+    }
+    timerReport("Calculating vectors with NLEmbedding")
+    
 }
 
 
@@ -60,7 +63,7 @@ import Playgrounds
     }
 }
 
-#Playground("Calc closest in arry")
+#Playground("Calc closest in array")
 {
     let chunks:[Chunk] = Bundle.main.decode("merged_chunks.json")
     print("Calculating the closest chunks in an array of \(chunks.count) chunks")

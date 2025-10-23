@@ -11,31 +11,32 @@ import Playgrounds
 
 #Playground("Naive embedding")
 {
-    let question = """
-        How can I extend a protocol?
-    """
+    let question = "How can I extend a protocol?"
     
-    if let contextModel = NLContextualEmbedding(language: .english)
-    {
-        let status = """
-        Created Contextual Embedding 👍🏼.
-          Dimension: \(contextModel.dimension),
-          Description: \(contextModel.description),
-          Model Identifier: \(contextModel.modelIdentifier)
-        """
-        print (status)
-        
-        if contextModel.hasAvailableAssets {
-            print("Loading assets...")
-            try await contextModel.requestAssets()
-            print("Assets requested 👍🏼")
-        }
-        try contextModel.load()
-        
-        let result = try contextModel.embeddingResult(for: question, language: nil)
-        let vector = result.meanVectorNaive()
+    guard let contextModel = NLContextualEmbedding(language: .english)
+    else {
+        fatalError("Cannot create the NLContextualEmbedding")
     }
+    
+    let status = """
+    Created Contextual Embedding 👍🏼.
+      Dimension: \(contextModel.dimension),
+      Description: \(contextModel.description),
+      Model Identifier: \(contextModel.modelIdentifier)
+    """
+    print (status)
+    
+    if contextModel.hasAvailableAssets {
+        print("Loading assets...")
+        try await contextModel.requestAssets()
+        print("Assets requested 👍🏼")
+    }
+    try contextModel.load()
+    
+    let result = try contextModel.embeddingResult(for: question, language: nil)
+    let vector = result.meanVectorNaive()
 }
+
 
 
 #Playground("Calc Just Embeddings with NLContextualEmbedding")
